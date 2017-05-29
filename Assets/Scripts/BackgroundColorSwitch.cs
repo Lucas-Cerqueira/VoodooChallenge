@@ -35,4 +35,25 @@ public class BackgroundColorSwitch : MonoBehaviour {
 
 		}
 	}
+
+	public void chgBlue ()
+	{
+		currentColor = 0;
+		bgSprite.color = colorArray [currentColor];
+		ball.layer = layers [currentColor];
+	}
+
+	public void chgRed ()
+	{
+		currentColor = 1;
+		bgSprite.color = colorArray [currentColor];
+		ball.layer = layers [currentColor];
+	}
+
+	public void chgYellow()
+	{
+		currentColor = 2;
+		bgSprite.color = colorArray [currentColor];
+		ball.layer = layers [currentColor];
+	}
 }
