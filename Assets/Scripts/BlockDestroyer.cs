@@ -16,7 +16,8 @@ public class BlockDestroyer : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		if (other.gameObject.tag == "Block") {
+		if (other.gameObject.tag == "Block") 
+		{
 			other.gameObject.SetActive (false);
 		}
 	}
