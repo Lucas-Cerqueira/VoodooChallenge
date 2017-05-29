@@ -8,6 +8,14 @@ public class BallMovement : MonoBehaviour {
 
 	private Rigidbody2D rb;
 
+	void OnCollisionEnter2D (Collision2D other)
+	{
+		if (other.gameObject.CompareTag("Block") && transform.position.y > other.transform.position.y)
+		{
+			rb.velocity = Vector2.zero;
+		}
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
