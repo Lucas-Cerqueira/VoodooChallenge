@@ -19,7 +19,6 @@ public class GameOver : MonoBehaviour {
 	{
 		if (other.gameObject.tag == "Ball") 
 		{
-			print ("Entrou");
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
 	}

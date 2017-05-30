@@ -16,9 +16,9 @@ public class BackgroundColorSwitch : MonoBehaviour {
 	{
 		bgSprite = GameObject.Find ("Background").GetComponent<SpriteRenderer> ();
 		ball = GameObject.Find ("Ball");
-		layers.Add(LayerMask.NameToLayer("BlueLayer"));
 		layers.Add(LayerMask.NameToLayer("RedLayer"));
 		layers.Add(LayerMask.NameToLayer("YellowLayer"));
+		layers.Add(LayerMask.NameToLayer("BlueLayer"));
 
 	}
 	
@@ -36,21 +36,22 @@ public class BackgroundColorSwitch : MonoBehaviour {
 		}
 	}
 
-	public void chgBlue ()
+
+	public void chgRed ()
 	{
 		currentColor = 0;
 		bgSprite.color = colorArray [currentColor];
 		ball.layer = layers [currentColor];
 	}
 
-	public void chgRed ()
+	public void chgYellow()
 	{
 		currentColor = 1;
 		bgSprite.color = colorArray [currentColor];
 		ball.layer = layers [currentColor];
 	}
 
-	public void chgYellow()
+	public void chgBlue ()
 	{
 		currentColor = 2;
 		bgSprite.color = colorArray [currentColor];

@@ -5,20 +5,38 @@ using UnityEngine.SceneManagement;
 
 public class BlockDestroyer : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+	public float delayBetweenDestroy = 0.5f;
 
+	private BlockSpawner blockSpawnerScript;
+	private Pool poolScript;
+	private float elapsedTime;
+
+
+	// Use this for initialization
+	void Start () 
+	{
+		GameObject pool = GameObject.Find("Pool");
+		blockSpawnerScript = pool.GetComponent<BlockSpawner> ();
+		poolScript = pool.GetComponent<Pool> ();
+		elapsedTime = delayBetweenDestroy;
 	}
 
 	// Update is called once per frame
-	void Update () {
-
+	void Update () 
+	{
+		elapsedTime += Time.deltaTime;
 	}
 
-	void OnTriggerEnter2D(Collider2D other) {
+	void OnTriggerEnter2D(Collider2D other) 
+	{
 		if (other.gameObject.tag == "Block") 
 		{
-			other.gameObject.SetActive (false);
+			poolScript.Destroy (other.gameObject);
+			if (elapsedTime >= delayBetweenDestroy) 
+			{
+				blockSpawnerScript.SpawnNextTopLine ();
+				elapsedTime = 0;
+			}
 		}
 	}
 }
