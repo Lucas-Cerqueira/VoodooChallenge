@@ -11,8 +11,24 @@ public class CameraFollow : MonoBehaviour {
 	private Transform ballTransform;
 	private Vector3 relativePositionToBall;
 	private float initialPositionX;
-	private float initialBallPositionY;
 	private bool previousBallGoingUp = false;
+
+	void OnTriggerEnter2D(Collider2D other) 
+	{
+		if (other.gameObject.tag == "Ball") 
+		{
+			follow = true;
+			relativePositionToBall = transform.position - ballTransform.position;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D other) 
+	{
+		if (other.gameObject.tag == "Ball") 
+		{
+			follow = false;
+		}
+	}
 
 	// Use this for initialization
 	void Start () 
@@ -22,34 +38,15 @@ public class CameraFollow : MonoBehaviour {
 		ballTransform = ball.transform;
 		relativePositionToBall = transform.position - ballTransform.position;
 		initialPositionX = transform.position.x;
-		initialBallPositionY = ballTransform.position.y;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Mathf.Abs (ballTransform.position.y - initialBallPositionY) >= followOffset && !follow) 
-		{
-			follow = true;
-			relativePositionToBall = transform.position - ballTransform.position;
-		}
-			
-
 		bool goingUp = ballMovementScript.GetGoingUp ();
 		if (goingUp && follow) {
 			transform.position = (ballTransform.position + relativePositionToBall);
 			transform.position = new Vector3 (initialPositionX, transform.position.y, transform.position.z);
-		} else 
-		{
-			follow = false;
 		}
-
-		if (goingUp && !previousBallGoingUp) 
-		{
-			follow = false;
-			initialBallPositionY = ballTransform.position.y;
-		}
-
-		previousBallGoingUp = goingUp;
 	}
 }

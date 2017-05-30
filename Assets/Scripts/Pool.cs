@@ -37,6 +37,8 @@ public class Pool : MonoBehaviour
 			newPoolObj.transform.SetParent (this.transform);
 			newPoolObj.SetActive (true);
 			poolList.Add (newPoolObj);
+			poolSize++;
+			spawnedCount++;
 			return newPoolObj;
 		}
 
