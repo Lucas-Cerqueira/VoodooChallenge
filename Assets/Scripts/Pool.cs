@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class Pool : MonoBehaviour
 {
-	private GameObject poolPrefab;
-	private int poolSize;
-	private bool scalable;
+	public GameObject poolPrefab;
+	public int poolSize;
+	public bool scalable;
 
 	private List<GameObject> poolList = new List<GameObject>();
 
 	private int spawnedCount = 0;
 
-	public void CreatePool (GameObject obj, int pSize, bool isScalable)
+	private void CreatePool ()
 	{
-		poolPrefab = obj;
-		poolSize = pSize;
-		scalable = isScalable;
+		print ("Criando pool " + poolPrefab.name);
 		for (int i = 0; i < poolSize; i++) 
 		{
 			GameObject poolObj = Instantiate (poolPrefab);
@@ -28,7 +26,7 @@ public class Pool : MonoBehaviour
 
 	public GameObject Instantiate ()
 	{
-		if (spawnedCount >= poolSize && !scalable)
+		if (spawnedCount >= poolSize && !scalable || poolList.Count == 0)
 			return null;
 
 		if (spawnedCount >= poolSize && scalable) 
@@ -66,14 +64,13 @@ public class Pool : MonoBehaviour
 	}
 
 	// Use this for initialization
-	void Start () 
+	void Awake() 
 	{
-		
+		CreatePool ();	
 	}
-	
-	// Update is called once per frame
-	void Update () 
+
+	void Update()
 	{
-		
 	}
+
 }

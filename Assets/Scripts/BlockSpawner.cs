@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class BlockSpawner : MonoBehaviour {
 
-	public GameObject blockPrefab;
-	public int poolSize = 15;
+	//public GameObject scoreCounterPrefab;
 	public float screenWidthInWorld = 5.6f;
 	public int amountOfLinesToKeepSpawnedAboveScreen = 3;   //Sorry for the long name, feel free to change to something better
 
 	private float lastTopLinePositionY;
 	private float distanceBetweenLines;
 	private List<Transform> verticalPositions = new List<Transform>();
-	private Pool poolScript;
+	private Pool blocksPool;
+	private Pool scoreTriggerPool;
 	private float blockWidth;
 	private List<Color> colorArray;
 	private int currentTopLinesSpawned = 0;
@@ -22,16 +22,15 @@ public class BlockSpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		blockWidth = screenWidthInWorld / 3.0f;
 		colorArray = GameObject.Find ("Background").GetComponent<BackgroundColorSwitch> ().colorArray;
-
 		GameObject.Find ("SpawnPositions").GetComponentsInChildren<Transform> (verticalPositions);
 		verticalPositions.RemoveAt (0);
 		distanceBetweenLines = Mathf.Abs (verticalPositions [2].position.y - verticalPositions [1].position.y); // Distance between middle and top line
 		lastTopLinePositionY = verticalPositions[2].position.y;
-		poolScript = GetComponent<Pool> ();
-		poolScript.CreatePool (blockPrefab, poolSize, true);
 
+		Pool[] pools = GetComponents<Pool> ();
+		blocksPool = pools [0];
+		scoreTriggerPool = pools [1];
 
 		int n = Random.Range (2, 4);
 		SpawnLineOfBlocks (n, verticalPositions [0].position.y);  	// Spawn the bottom line
@@ -52,6 +51,7 @@ public class BlockSpawner : MonoBehaviour {
 	{
 		
 	}
+		
 
 	public void SpawnNextTopLine ()
 	{
@@ -67,13 +67,21 @@ public class BlockSpawner : MonoBehaviour {
 		int colorIndex = 0;
 		int blackBlocksCounter = 0;
 		Color color;
+		float blockWidth = screenWidthInWorld / (float) amount;
 
 		List<GameObject> blocks = new List<GameObject> ();
 		float firstPosition;
 		if (amount == 2)
-			firstPosition = -screenWidthInWorld / 2.0f + screenWidthInWorld / 12.0f + blockWidth / 2.0f;  // Screen left limit + gap to keep blocks centered + half of blockWidth
+			firstPosition = -screenWidthInWorld / 2.0f + blockWidth / 2.0f;  // Screen left limit + gap to keep blocks centered + half of blockWidth
 		else // if n==3
 			firstPosition = -screenWidthInWorld / 2.0f + blockWidth / 2.0f; // Screen left limit + half of blockWidth
+
+
+		GameObject scoreTrigger = scoreTriggerPool.Instantiate ();
+//		if (scoreTrigger)
+			scoreTrigger.transform.position = new Vector3 (0, yPosition, 0);
+//		else
+//			print ("Nao spawnou trigger");
 
 
 		for (int i = 0; i < amount; i++) 
@@ -82,7 +90,7 @@ public class BlockSpawner : MonoBehaviour {
 			do 
 			{
 				colorIndex = Random.Range (0, colorArray.Count + 1);
-			} while (colorIndex == colorArray.Count && blackBlocksCounter >= amount-1);
+			} while ((colorIndex == colorArray.Count && blackBlocksCounter >= amount-1) || (amount==3 && i==1 && colorIndex == colorArray.Count));
 
 			if (colorIndex == colorArray.Count) 
 			{
@@ -93,11 +101,13 @@ public class BlockSpawner : MonoBehaviour {
 				color = colorArray [colorIndex];
 			
 			float xPosition = firstPosition + i * screenWidthInWorld / (float)amount;
-			GameObject obj = poolScript.Instantiate ();
+			GameObject obj = blocksPool.Instantiate ();
 			blocks.Add (obj);
 			obj.GetComponent<SpriteRenderer> ().color = color;
+			obj.transform.localScale = new Vector3 (blockWidth * 100, obj.transform.localScale.y, 1);
 			obj.layer = colorIndex + LayerMask.NameToLayer ("RedLayer");
 			blocks [i].transform.position = new Vector3 (xPosition, yPosition, 0);
+
 		}
 	}
 }

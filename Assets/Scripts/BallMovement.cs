@@ -48,14 +48,13 @@ public class BallMovement : MonoBehaviour {
 		if (isStarting) 
 		{
 			Vector3 direction = Vector3.zero;
-			#if UNITY_STANDALONE
+			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 			if (Input.GetMouseButtonUp (0))
 			{
 				direction = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				direction.z= 0.0f;
 			}
-			#endif
-			#if UNITY_ANDROID
+			#elif UNITY_ANDROID
 			if (Input.GetTouch(0).phase == TouchPhase.Ended)
 			{
 			direction = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.GetTouch(0).position.x,Input.GetTouch(0).position.y,0.0f));

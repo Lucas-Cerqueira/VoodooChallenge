@@ -8,7 +8,7 @@ public class BlockDestroyer : MonoBehaviour {
 	public float delayBetweenDestroy = 0.5f;
 
 	private BlockSpawner blockSpawnerScript;
-	private Pool poolScript;
+	private Pool[] pools;
 	private float elapsedTime;
 
 
@@ -17,7 +17,7 @@ public class BlockDestroyer : MonoBehaviour {
 	{
 		GameObject pool = GameObject.Find("Pool");
 		blockSpawnerScript = pool.GetComponent<BlockSpawner> ();
-		poolScript = pool.GetComponent<Pool> ();
+		pools = pool.GetComponents<Pool> ();
 		elapsedTime = delayBetweenDestroy;
 	}
 
@@ -29,10 +29,14 @@ public class BlockDestroyer : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other) 
 	{
-		if (other.gameObject.tag == "Block") 
+		if (other.gameObject.CompareTag("Block") || other.gameObject.CompareTag("ScoreTrigger")) 
 		{
-			poolScript.Destroy (other.gameObject);
-			if (elapsedTime >= delayBetweenDestroy) 
+			if (other.gameObject.CompareTag("Block"))
+				pools[0].Destroy (other.gameObject);
+			else
+				pools[1].Destroy (other.gameObject);
+			
+			if (elapsedTime >= delayBetweenDestroy && blockSpawnerScript) 
 			{
 				blockSpawnerScript.SpawnNextTopLine ();
 				elapsedTime = 0;
