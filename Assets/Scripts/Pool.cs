@@ -14,7 +14,6 @@ public class Pool : MonoBehaviour
 
 	private void CreatePool ()
 	{
-		print ("Criando pool " + poolPrefab.name);
 		for (int i = 0; i < poolSize; i++) 
 		{
 			GameObject poolObj = Instantiate (poolPrefab);
